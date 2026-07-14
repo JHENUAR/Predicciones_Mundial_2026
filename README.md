@@ -88,6 +88,7 @@ El modelo se alimenta de múltiples fuentes:
 
 ## 📁 Estructura del proyecto
 
+```
 📦 Proyecto_Mundial
 │
 ├── 📁 01_Scraping
@@ -107,6 +108,7 @@ El modelo se alimenta de múltiples fuentes:
 │
 └── 📄 Observaciones_Modelo_XGBoost
 └── Evaluación y métricas del modelo
+```
 
 ---
 
