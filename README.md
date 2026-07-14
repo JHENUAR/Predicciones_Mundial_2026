@@ -105,9 +105,9 @@ El modelo se alimenta de múltiples fuentes:
 │
 ├── 📁 Data
 │ └── Archivos CSV (datos del modelo)
-│
-└── 📄 Observaciones_Modelo_XGBoost
-└── Evaluación y métricas del modelo
+├── 📄 Descripcion_Modelo_XGBoost.md
+└── 📄 Observaciones_Modelo_XGBoost.md
+└── 📄 README.md
 ```
 
 ---
