@@ -12,27 +12,27 @@ XGBoost es una implementación optimizada y escalable del algoritmo **Gradient B
 
 El boosting secuencial construye árboles de forma iterativa, donde cada nuevo árbol corrige los errores (residuos) del conjunto anterior. La predicción final es la suma ponderada de las predicciones de todos los árboles:
 
-\[
+$$
 \hat{y}_i = \sum_{k=1}^{K} f_k(x_i), \quad f_k \in \mathcal{F}
-\]
+$$
 
 donde:
-- \(x_i\) son las características del partido \(i\),
-- \(f_k\) es un árbol de decisión,
-- \(\mathcal{F}\) es el espacio de funciones (árboles),
-- \(K\) es el número total de árboles.
+- $x_i$ son las características del partido $i$,
+- $f_k$ es un árbol de decisión,
+- $\mathcal{F}$ es el espacio de funciones (árboles),
+- $K$ es el número total de árboles.
 
 ### 1.2. Función objetivo de XGBoost
 
 XGBoost minimiza una función objetivo regularizada que combina una **pérdida por error** y un **término de penalización** por complejidad:
 
-\[
+$$
 \mathcal{L}(\theta) = \sum_{i=1}^{n} \ell(y_i, \hat{y}_i) + \sum_{k=1}^{K} \Omega(f_k)
-\]
+$$
 
 donde:
-- \(\ell\) es la función de pérdida (en nuestro caso, **log-loss** para clasificación multiclase),
-- \(\Omega(f) = \gamma T + \frac{1}{2}\lambda \|\mathbf{w}\|^2\) es la regularización, con \(T\) el número de hojas del árbol, \(\mathbf{w}\) los pesos de las hojas, \(\gamma\) y \(\lambda\) hiperparámetros de penalización.
+- $\ell$ es la función de pérdida (en nuestro caso, **log-loss** para clasificación multiclase),
+- $\Omega(f) = \gamma T + \frac{1}{2}\lambda \|\mathbf{w}\|^2$ es la regularización, con $T$ el número de hojas del árbol, $\mathbf{w}$ los pesos de las hojas, $\gamma$ y $\lambda$ hiperparámetros de penalización.
 
 Esta regularización evita el sobreajuste y mejora la generalización.
 
@@ -40,23 +40,23 @@ Esta regularización evita el sobreajuste y mejora la generalización.
 
 ## 📐 2. Matemáticas del entrenamiento de XGBoost
 
-En cada iteración \(t\), se añade un nuevo árbol \(f_t\) que minimiza una **aproximación de segundo orden** de la pérdida:
+En cada iteración $t$, se añade un nuevo árbol $f_t$ que minimiza una **aproximación de segundo orden** de la pérdida:
 
-\[
+$$
 \mathcal{L}^{(t)} \simeq \sum_{i=1}^{n} \left[ \ell(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i) \right] + \Omega(f_t)
-\]
+$$
 
 donde:
-- \(g_i = \partial_{\hat{y}^{(t-1)}} \ell(y_i, \hat{y}^{(t-1)})\) es el gradiente (primera derivada),
-- \(h_i = \partial^2_{\hat{y}^{(t-1)}} \ell(y_i, \hat{y}^{(t-1)})\) es la hessiana (segunda derivada).
+- $g_i = \partial_{\hat{y}^{(t-1)}} \ell(y_i, \hat{y}^{(t-1)})$ es el gradiente (primera derivada),
+- $h_i = \partial^2_{\hat{y}^{(t-1)}} \ell(y_i, \hat{y}^{(t-1)})$ es la hessiana (segunda derivada).
 
 Al expandir y reordenar, la ganancia al dividir un nodo en una hoja se calcula como:
 
-\[
+$$
 \text{Ganancia} = \frac{1}{2} \left[ \frac{(\sum_{i \in I_L} g_i)^2}{\sum_{i \in I_L} h_i + \lambda} + \frac{(\sum_{i \in I_R} g_i)^2}{\sum_{i \in I_R} h_i + \lambda} - \frac{(\sum_{i \in I} g_i)^2}{\sum_{i \in I} h_i + \lambda} \right] - \gamma
-\]
+$$
 
-donde \(I_L\) e \(I_R\) son los conjuntos de muestras en las hojas izquierda y derecha, e \(I = I_L \cup I_R\). Solo se realiza la partición si la ganancia supera a \(\gamma\).
+donde $I_L$ e $I_R$ son los conjuntos de muestras en las hojas izquierda y derecha, e $I = I_L \cup I_R$. Solo se realiza la partición si la ganancia supera a $\gamma$.
 
 Este enfoque permite una poda eficiente y controla la complejidad del árbol.
 
@@ -74,11 +74,11 @@ El objetivo es predecir el resultado de un partido entre dos equipos (local y vi
 
 La función de pérdida utilizada es **log-loss** (entropía cruzada) para clasificación multiclase:
 
-\[
+$$
 \ell(y, \hat{y}) = -\sum_{c=1}^{3} y_c \log(\hat{y}_c)
-\]
+$$
 
-donde \(y_c\) es 1 si la clase real es \(c\), y 0 en caso contrario; \(\hat{y}_c\) es la probabilidad predicha por el modelo para esa clase.
+donde $y_c$ es 1 si la clase real es $c$, y 0 en caso contrario; $\hat{y}_c$ es la probabilidad predicha por el modelo para esa clase.
 
 ### 3.2. Ingeniería de características (Feature Engineering)
 
@@ -86,11 +86,11 @@ A partir de las estadísticas de los equipos (provenientes de datos históricos 
 
 #### Características base (diferencias)
 
-Para cada atributo numérico \(A\) (por ejemplo, `avg_Goles_total`, `avg_Posesión_total`, `Puntuación` del ranking FIFA, `Valor_mercado`), se calcula:
+Para cada atributo numérico $A$ (por ejemplo, `avg_Goles_total`, `avg_Posesión_total`, `Puntuación` del ranking FIFA, `Valor_mercado`), se calcula:
 
-\[
+$$
 \Delta A = A_{\text{local}} - A_{\text{visitante}}
-\]
+$$
 
 Esto captura la ventaja relativa del local sobre el visitante.
 
@@ -99,21 +99,21 @@ Esto captura la ventaja relativa del local sobre el visitante.
 Se generan ratios que miden la eficiencia ofensiva, defensiva y de control del juego:
 
 - **Ratio de goles por posesión**:
-\[
+$$
 \text{ratio\_goles\_posesion} = \frac{\text{avg\_Goles\_total}}{\text{avg\_Posesión\_total} + 0.01}
-\]
+$$
 - **Ratio de tarjetas por faltas** (indica disciplina):
-\[
+$$
 \text{ratio\_tarjetas} = \frac{\text{avg\_Tarjetas\_amarillas\_total}}{\text{avg\_Faltas\_total} + 0.01}
-\]
+$$
 - **Eficiencia de gol** (goles por remate a puerta):
-\[
+$$
 \text{eficiencia\_gol} = \frac{\text{avg\_Goles\_total}}{\text{avg\_Remates\_a\_puerta\_total} + 0.01}
-\]
+$$
 - **Ratio de corners por posesión**:
-\[
+$$
 \text{ratio\_corners} = \frac{\text{avg\_Córneres\_total}}{\text{avg\_Posesión\_total} + 0.01}
-\]
+$$
 
 Luego, también se calcula la diferencia de cada ratio entre local y visitante.
 
@@ -214,3 +214,4 @@ XGBoost proporciona automáticamente la **importancia de cada característica** 
 El modelo XGBoost ha demostrado ser una herramienta robusta y precisa para predecir resultados de partidos de fútbol en este contexto. Su capacidad para modelar interacciones complejas entre características, junto con la regularización y la optimización de hiperparámetros, permite obtener predicciones fiables. La combinación con simulaciones Monte Carlo añade un componente probabilístico que refleja la incertidumbre inherente al deporte.
 
 ---
+
