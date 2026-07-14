@@ -173,7 +173,9 @@ Entrenamiento del modelo
 Predicción de partidos
 Simulación Monte Carlo
 
-📈 Resultados del sistema
+---
+
+## 📈 Resultados del sistema
 
 El sistema genera:
 
@@ -183,22 +185,28 @@ Goles esperados (xG)
 Probabilidad de avanzar de fase
 Probabilidad de ser campeón
 
-🛠️ Tecnologías utilizadas
+---
 
-Python
-pandas
-numpy
-xgboost
-scikit-learn
-joblib
+## 🛠️ Tecnologías utilizadas
 
-🔮 Mejoras futuras
+- Python
+- pandas
+- numpy
+- xgboost
+- scikit-learn
+- joblib
+
+---
+
+## 🔮 Mejoras futuras
 
 Incorporar variables adicionales (lesiones, clima, táctica)
 Implementar modelos más avanzados
 Aumentar número de simulaciones
 Desarrollar interfaz web interactiva
 
-📝 Conclusión
+---
+
+## 📝 Conclusión
 
 Este proyecto demuestra cómo la integración de Machine Learning y simulación probabilística permite analizar y predecir el comportamiento de un torneo de fútbol de manera estructurada y basada en datos. Si bien el modelo no garantiza resultados exactos, proporciona una aproximación robusta y útil para la toma de decisiones y análisis deportivo.
